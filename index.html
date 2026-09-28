@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Final - Auditoría Informática (Casos y Teoría)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .quiz-container {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .question-block {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-title {
+            font-size: 1.2em;
+            color: #2980b9;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #34495e;
+            font-style: normal;
+        }
+        .instruction {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            background-color: #dcdde1;
+        }
+        .option-btn.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        .option-btn.correct {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+        .option-btn.incorrect {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+        }
+        .submit-btn, .reload-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #2c3e50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover, .reload-btn:hover {
+            background-color: #1a252f;
+        }
+        .reload-btn {
+            background-color: #e67e22;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Examen de Auditoría Informática</h1>
+    <h3>ISO/IEC 27001:2022 (Casos Prácticos y Teoría)</h3>
+    
+    <div class="quiz-container" id="quiz-container">
+        <!-- Los reactivos se inyectarán aquí -->
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="checkAnswers()">Calificar Examen</button>
+    <div class="score-display" id="score-display"></div>
+    <button class="reload-btn" id="reload-btn" onclick="location.reload()">Generar Nuevo Examen Aleatorio</button>
+
+    <script>
+        const rawItems = [
+            // --- 11 CASOS PRÁCTICOS ---
+            {
+                title: "Caso Práctico",
+                text: "Una empresa de logística opera centros de distribución con aplicaciones web. Depende de dos proveedores regionales de telecomunicaciones que usan parcialmente la misma infraestructura física. El SGSI sólo analiza malware y accesos no autorizados; Dirección dice que la conectividad es un asunto de operaciones.",
+                type: "single",
+                options: [
+                    { text: "Excluir telecomunicaciones porque el servicio es externo.", correct: false },
+                    { text: "Analizar la dependencia como una cuestión externa pertinente que puede afectar al SGSI.", correct: true },
+                    { text: "Incorporar al proveedor dentro de la plantilla de empleados.", correct: false },
+                    { text: "Transferir automáticamente todos los riesgos al proveedor.", correct: false },
+                    { text: "Considerar el asunto únicamente después de una interrupción.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Una aseguradora inicia un proyecto de inteligencia artificial con información de clientes. Dirección aprobó presupuesto y alcance, pero no incluyó al responsable de seguridad porque la revisión se hará antes de producción. El proyecto forma parte de la estrategia digital.",
+                type: "single",
+                options: [
+                    { text: "Integración de los requisitos del SGSI en los procesos del negocio.", correct: true },
+                    { text: "Exclusivamente capacitación del equipo de desarrollo.", correct: false },
+                    { text: "Únicamente clasificación de activos.", correct: false },
+                    { text: "Sólo el procedimiento de auditoría interna.", correct: false },
+                    { text: "La certificación personal del responsable del proyecto.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Tres propietarios califican riesgos similares como aceptable, no aceptable y pendiente. La empresa no definió criterios de aceptación ni niveles de riesgo. Cada propietario utiliza experiencia personal, por lo que no existe comparación consistente.",
+                type: "multiple",
+                options: [
+                    { text: "Definir criterios de aceptación de riesgos.", correct: true },
+                    { text: "Definir criterios para realizar las evaluaciones.", correct: true },
+                    { text: "Buscar resultados consistentes y comparables.", correct: true },
+                    { text: "Prohibir que los propietarios participen en las decisiones.", correct: false },
+                    { text: "Utilizar obligatoriamente una metodología cuantitativa monetaria.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Después de una campaña de phishing simulado, 18% de los usuarios introduce credenciales. Recursos Humanos propone castigar a todos los participantes. Seguridad considera usar los resultados para capacitación y reforzar mecanismos de reporte.",
+                type: "multiple",
+                options: [
+                    { text: "Reforzar el conocimiento sobre amenazas y responsabilidades.", correct: true },
+                    { text: "Comunicar cómo reportar mensajes sospechosos.", correct: true },
+                    { text: "Evaluar si las acciones de concienciación están siendo efectivas.", correct: true },
+                    { text: "Mantener a los usuarios ajenos a los resultados.", correct: false },
+                    { text: "Sustituir completamente los controles técnicos por capacitación.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "La organización terceriza el monitoreo 24x7. El proveedor entrega un reporte mensual, pero la empresa no revisa tiempos de respuesta, calidad de alertas ni escalamiento. Dirección considera que el servicio deja de ser responsabilidad del SGSI porque se contrató externamente.",
+                type: "multiple",
+                options: [
+                    { text: "Definir criterios para el servicio externo pertinente.", correct: true },
+                    { text: "Mantener control sobre el proceso externalizado.", correct: true },
+                    { text: "Evaluar resultados y desempeño esperado.", correct: true },
+                    { text: "Conservar evidencia necesaria para demostrar que el proceso funciona según lo previsto.", correct: true },
+                    { text: "Transferir toda responsabilidad al proveedor.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "El programa de auditoría revisa cada proceso una vez al año. Gestión de identidades tiene hallazgos repetidos y se implementó un nuevo servicio cloud crítico. Otros procesos llevan años sin hallazgos relevantes.",
+                type: "multiple",
+                options: [
+                    { text: "Importancia de los procesos.", correct: true },
+                    { text: "Cambios que afectan a la organización.", correct: true },
+                    { text: "Resultados de auditorías anteriores.", correct: true },
+                    { text: "Riesgos y prioridades pertinentes.", correct: true },
+                    { text: "Aplicar siempre la misma frecuencia a todos.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Un empleado envía información sensible al destinatario equivocado. El receptor borra el archivo y el incidente se cierra. No se analiza por qué el sistema permitió seleccionar direcciones externas similares ni si otros usuarios están expuestos al mismo riesgo.",
+                type: "multiple",
+                options: [
+                    { text: "Causa de la no conformidad.", correct: true },
+                    { text: "Existencia de situaciones similares.", correct: true },
+                    { text: "Acciones para prevenir recurrencia.", correct: true },
+                    { text: "Revisión de eficacia de las acciones.", correct: true },
+                    { text: "Limitarse a borrar el mensaje enviado.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Una empresa despliega bases de datos en una plataforma cloud. El equipo supone que el proveedor se encarga automáticamente de cifrado, respaldos, identidades y configuración. Luego descubre que varias funciones correspondían al cliente en el modelo de responsabilidades compartidas.",
+                type: "multiple",
+                options: [
+                    { text: "Seguridad para el uso de servicios en la nube.", correct: true },
+                    { text: "Gestión de proveedores.", correct: true },
+                    { text: "Definición de responsabilidades y requisitos contractuales.", correct: true },
+                    { text: "Revisión de configuraciones y controles efectivamente habilitados.", correct: true },
+                    { text: "Asumir que una certificación del proveedor elimina todas las responsabilidades propias.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Un contratista externo administrará un sistema financiero por seis meses. El área usuaria solicita acceso privilegiado el mismo día que inicia. No se verificaron referencias, no firmó cláusulas adicionales de confidencialidad y no recibió inducción de seguridad.",
+                type: "multiple",
+                options: [
+                    { text: "Selección o verificación apropiada.", correct: true },
+                    { text: "Términos y condiciones de la relación.", correct: true },
+                    { text: "Concienciación y formación.", correct: true },
+                    { text: "Acuerdos de confidencialidad cuando correspondan.", correct: true },
+                    { text: "Únicamente CCTV.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "Un proveedor de aire acondicionado entra a la sala de servidores para mantenimiento. Tiene autorización general al edificio, pero nadie valida específicamente su ingreso a la sala ni lo acompaña. Permanece solo durante 40 minutos.",
+                type: "multiple",
+                options: [
+                    { text: "Ingreso físico a áreas seguras.", correct: true },
+                    { text: "Trabajo en áreas seguras.", correct: true },
+                    { text: "Supervisión de seguridad física.", correct: true },
+                    { text: "Gestión de proveedores cuando corresponda.", correct: true },
+                    { text: "Sólo seguridad del código fuente.", correct: false }
+                ]
+            },
+            {
+                title: "Caso Práctico",
+                text: "El equipo de desarrollo copia mensualmente la base de datos de producción al entorno de pruebas. Contiene nombres, correos, información financiera y credenciales históricas. Los desarrolladores tienen acceso amplio y pruebas tiene menos controles que producción.",
+                type: "multiple",
+                options: [
+                    { text: "Información de prueba.", correct: true },
+                    { text: "Enmascaramiento de datos.", correct: true },
+                    { text: "Separación de entornos de desarrollo, pruebas y producción.", correct: true },
+                    { text: "Restricción de acceso y protección de información sensible.", correct: true },
+                    { text: "Mantener los datos sin cambios porque así las pruebas son más realistas.", correct: false }
+                ]
+            },
+            
+            // --- 29 PREGUNTAS TEÓRICAS ---
+            { title: "Pregunta Teórica", text: "¿Qué especifica la norma NTP-ISO/IEC 27001:2022?", type: "single", options: [ { text: "Requisitos para sistemas de gestión de seguridad de la información.", correct: true }, { text: "Controles detallados de seguridad perimetral.", correct: false }, { text: "Técnicas criptográficas para protección de datos.", correct: false }, { text: "Guías de auditoría financiera para TI.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "De acuerdo a la Enmienda 1:2024 (Cláusula 4.1), ¿qué nuevo elemento debe determinar la organización?", type: "single", options: [ { text: "Si el cambio climático es una cuestión pertinente.", correct: true }, { text: "Si la inteligencia artificial afecta las operaciones.", correct: false }, { text: "La huella de carbono de los centros de datos.", correct: false }, { text: "El presupuesto anual de ciberseguridad.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué cláusula exige comprender las necesidades y expectativas de las partes interesadas?", type: "single", options: [ { text: "Cláusula 4.2", correct: true }, { text: "Cláusula 5.1", correct: false }, { text: "Cláusula 6.1", correct: false }, { text: "Cláusula 8.2", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué documento debe contener los límites y aplicabilidad del SGSI según la cláusula 4.3?", type: "single", options: [ { text: "El alcance del SGSI.", correct: true }, { text: "La política de seguridad de la información.", correct: false }, { text: "La declaración de aplicabilidad (SoA).", correct: false }, { text: "El registro de riesgos.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Según la cláusula 5.1, ¿quién debe demostrar compromiso con el SGSI?", type: "single", options: [ { text: "La alta dirección.", correct: true }, { text: "El auditor interno.", correct: false }, { text: "El administrador de TI.", correct: false }, { text: "El proveedor de servicios en la nube.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué requisito exige explícitamente la cláusula 5.2 sobre la política de seguridad?", type: "single", options: [ { text: "Estar disponible como información documentada.", correct: true }, { text: "Estar escrita únicamente en lenguaje técnico.", correct: false }, { text: "Ser aprobada por una entidad gubernamental.", correct: false }, { text: "Ser renovada cada seis meses exactos.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Asignar autoridades para informar sobre el desempeño del SGSI es un requisito de la cláusula:", type: "single", options: [ { text: "5.3 Roles, responsabilidades y autoridades.", correct: true }, { text: "7.2 Competencia.", correct: false }, { text: "9.2 Auditoría interna.", correct: false }, { text: "4.4 Sistema de gestión.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué busca determinar la organización al planificar el SGSI en la cláusula 6.1.1?", type: "single", options: [ { text: "Riesgos y oportunidades que necesitan ser abordados.", correct: true }, { text: "Exclusivamente las amenazas tecnológicas.", correct: false }, { text: "El presupuesto necesario para el software.", correct: false }, { text: "El número de empleados a capacitar.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Según la cláusula 6.1.2, ¿qué debe establecer el proceso de evaluación de riesgos?", type: "single", options: [ { text: "Criterios de aceptación del riesgo.", correct: true }, { text: "El proveedor del software antivirus.", correct: false }, { text: "El código fuente de las aplicaciones.", correct: false }, { text: "Los turnos de guardia del personal.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "En el tratamiento de riesgos (6.1.3), ¿con qué se deben comparar los controles seleccionados?", type: "single", options: [ { text: "Con los controles del Anexo A de la norma.", correct: true }, { text: "Con las normativas financieras locales.", correct: false }, { text: "Con las políticas de recursos humanos.", correct: false }, { text: "Con los estándares de cableado de red.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué documento formal exige la cláusula 6.1.3 y justifica la inclusión o exclusión de controles?", type: "single", options: [ { text: "La Declaración de Aplicabilidad (SoA).", correct: true }, { text: "El Plan de Continuidad del Negocio.", correct: false }, { text: "El Acuerdo de Nivel de Servicio (SLA).", correct: false }, { text: "El Manual de Usuario del SGSI.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "De acuerdo a la cláusula 6.2, los objetivos de seguridad de la información deben:", type: "single", options: [ { text: "Ser medibles (si es posible) y coherentes con la política.", correct: true }, { text: "Ser confidenciales para todo el personal operativo.", correct: false }, { text: "Estar enfocados únicamente en la infraestructura física.", correct: false }, { text: "Aplicar solamente al departamento de sistemas.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Si se determinan cambios en el SGSI, la cláusula 6.3 exige que se lleven a cabo de manera:", type: "single", options: [ { text: "Planificada.", correct: true }, { text: "Inmediata y reactiva.", correct: false }, { text: "Externalizada a consultores.", correct: false }, { text: "Aleatoria según la disponibilidad.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué exige la cláusula 7.2 (Competencia) conservar como evidencia?", type: "single", options: [ { text: "Información documentada apropiada de la competencia.", correct: true }, { text: "Copias de los títulos universitarios impresos.", correct: false }, { text: "Exámenes médicos del personal de TI.", correct: false }, { text: "Fotografías de las áreas de trabajo.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Según la cláusula 7.3, ¿de qué deben tomar conciencia las personas que trabajan en la organización?", type: "single", options: [ { text: "Su contribución a la eficacia del SGSI.", correct: true }, { text: "La configuración exacta de los firewalls.", correct: false }, { text: "Los presupuestos anuales de tecnología.", correct: false }, { text: "El código de ética contable de la empresa.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué cláusula exige determinar qué, cuándo, con quién y cómo comunicarse?", type: "single", options: [ { text: "Cláusula 7.4 (Comunicación).", correct: true }, { text: "Cláusula 8.1 (Control operacional).", correct: false }, { text: "Cláusula 5.2 (Política).", correct: false }, { text: "Cláusula 9.3 (Revisión).", correct: false } ] },
+            { title: "Pregunta Teórica", text: "La información documentada requerida por el SGSI debe controlarse para asegurar (Cláusula 7.5.3):", type: "single", options: [ { text: "Que esté disponible, adecuada y protegida.", correct: true }, { text: "Que sea pública en el sitio web corporativo.", correct: false }, { text: "Que esté impresa bajo llave en bóvedas.", correct: false }, { text: "Que se elimine anualmente por defecto.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué exige la cláusula 8.1 (Planificación y control operacional) frente a los cambios no intencionados?", type: "single", options: [ { text: "Revisar las consecuencias y actuar para mitigar efectos.", correct: true }, { text: "Despedir al personal responsable del cambio.", correct: false }, { text: "Ignorarlos si no afectan la operatividad inmediata.", correct: false }, { text: "Documentarlos en la política general.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "La organización debe realizar evaluaciones de riesgos a intervalos planificados o cuando:", type: "single", options: [ { text: "Se propongan u ocurran cambios significativos.", correct: true }, { text: "Lo solicite un medio de comunicación externo.", correct: false }, { text: "Fallezca el director de la empresa.", correct: false }, { text: "Haya cambio de horario de verano.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Qué exige la cláusula 9.1 sobre el seguimiento y medición?", type: "single", options: [ { text: "Determinar métodos para asegurar resultados válidos.", correct: true }, { text: "Contratar exclusivamente auditores externos.", correct: false }, { text: "Medir el tráfico de internet cada segundo.", correct: false }, { text: "Publicar los resultados en redes sociales.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Las auditorías internas (Cláusula 9.2) tienen como propósito verificar si el SGSI:", type: "single", options: [ { text: "Está conforme a los requisitos de la organización y la norma.", correct: true }, { text: "Supera tecnológicamente a la competencia directa.", correct: false }, { text: "Consume menos del 5% del presupuesto general.", correct: false }, { text: "Está exento de cualquier amenaza existente.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Según la cláusula 9.3, ¿quién debe realizar la revisión del SGSI a intervalos planificados?", type: "single", options: [ { text: "La alta dirección.", correct: true }, { text: "El administrador de bases de datos.", correct: false }, { text: "El departamento de recursos humanos.", correct: false }, { text: "El auditor externo de certificación.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Cuál es una entrada obligatoria para la revisión por la dirección según 9.3.2?", type: "single", options: [ { text: "El estado de las acciones de revisiones anteriores.", correct: true }, { text: "El registro de asistencia del personal de limpieza.", correct: false }, { text: "El inventario de licencias de ofimática.", correct: false }, { text: "El reporte de ventas trimestrales.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Cuando ocurre una no conformidad, la organización debe (Cláusula 10.2):", type: "single", options: [ { text: "Reaccionar, evaluar causas e implementar acciones.", correct: true }, { text: "Aceptar el riesgo sin documentarlo previamente.", correct: false }, { text: "Suspender inmediatamente todas las operaciones.", correct: false }, { text: "Cambiar la política de seguridad por completo.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿Cuál de los siguientes es un atributo de seguridad introducido para los controles del Anexo A?", type: "single", options: [ { text: "Tipo de control (Preventivo, Detectivo, Correctivo).", correct: true }, { text: "Tipo de hardware (Servidor, Switch, Router).", correct: false }, { text: "Nivel de empleado (Junior, Semi-Senior, Senior).", correct: false }, { text: "Costo de implementación (Bajo, Medio, Alto).", correct: false } ] },
+            { title: "Pregunta Teórica", text: "El control A.5.1 'Políticas para la seguridad de la información' es un control de tipo:", type: "single", options: [ { text: "Organizacional.", correct: true }, { text: "Tecnológico.", correct: false }, { text: "Físico.", correct: false }, { text: "De personal.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "Según el control A.5.7, la información de amenazas debe recopilarse y analizarse para producir:", type: "single", options: [ { text: "Inteligencia de amenazas.", correct: true }, { text: "Sanciones disciplinarias.", correct: false }, { text: "Reportes financieros.", correct: false }, { text: "Campañas de marketing.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "El control A.5.14 sobre 'Transferencia de información' exige:", type: "single", options: [ { text: "Reglas o acuerdos para instalaciones de transferencia.", correct: true }, { text: "Prohibir totalmente el uso de correos electrónicos.", correct: false }, { text: "Transferir datos exclusivamente en discos duros.", correct: false }, { text: "Eliminar el cifrado para facilitar la lectura.", correct: false } ] },
+            { title: "Pregunta Teórica", text: "¿En qué capítulo de la ISO 27001 se exigen auditorías internas y revisiones por la dirección?", type: "single", options: [ { text: "Capítulo 9: Evaluación del desempeño.", correct: true }, { text: "Capítulo 4: Contexto de la organización.", correct: false }, { text: "Capítulo 6: Planificación.", correct: false }, { text: "Capítulo 8: Operación.", correct: false } ] }
+        ];
+
+        // Función para inyectar caracteres invisibles y evitar que se adivine por longitud
+        function equalizeLength(text) {
+            const targetLength = 155; 
+            if (text.length >= targetLength) return text.substring(0, targetLength);
+            const padding = '\u200B'.repeat(targetLength - text.length); 
+            return text + padding;
+        }
+
+        // Función para barajar los arrays (preguntas y respuestas)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        let formattedItems = [];
+
+        function buildQuiz() {
+            // Preparar y barajar opciones
+            formattedItems = rawItems.map(item => {
+                let options = item.options.map(opt => ({
+                    text: equalizeLength(opt.text),
+                    correct: opt.correct
+                }));
+                shuffleArray(options);
+                return { ...item, options: options };
+            });
+
+            // Barajar el orden de los 40 reactivos (casos + teoría mezclados)
+            shuffleArray(formattedItems);
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            formattedItems.forEach((itemData, index) => {
+                let qDiv = document.createElement('div');
+                qDiv.className = 'question-block';
+                qDiv.dataset.type = itemData.type;
+                
+                let titleText = document.createElement('div');
+                titleText.className = 'question-title';
+                titleText.innerText = `${index + 1}. ${itemData.title}`;
+                qDiv.appendChild(titleText);
+
+                let caseText = document.createElement('div');
+                caseText.className = 'question-text';
+                // Si es un caso, mantener la cursiva y el fondo, si es teoría, que sea normal.
+                if(itemData.title === "Pregunta Teórica") {
+                    caseText.style.fontStyle = "normal";
+                    caseText.style.background = "#fff";
+                    caseText.style.borderLeft = "none";
+                    caseText.style.padding = "0";
+                }
+                caseText.innerText = itemData.text;
+                qDiv.appendChild(caseText);
+
+                let instruction = document.createElement('div');
+                instruction.className = 'instruction';
+                instruction.innerText = itemData.type === 'single' ? "Selecciona la respuesta correcta (Única):" : "Selecciona todas las respuestas correctas (Múltiple):";
+                qDiv.appendChild(instruction);
+
+                itemData.options.forEach((opt) => {
+                    let btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt.text;
+                    btn.dataset.correct = opt.correct;
+                    
+                    btn.onclick = function() {
+                        if (itemData.type === 'single') {
+                            const siblings = qDiv.querySelectorAll('.option-btn');
+                            siblings.forEach(s => s.classList.remove('selected'));
+                            this.classList.add('selected');
+                        } else {
+                            this.classList.toggle('selected');
+                        }
+                    };
+
+                    qDiv.appendChild(btn);
+                });
+                
+                container.appendChild(qDiv);
+            });
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const container = document.getElementById('quiz-container');
+            const questions = container.querySelectorAll('.question-block');
+
+            questions.forEach(qDiv => {
+                const buttons = qDiv.querySelectorAll('.option-btn');
+                let isCorrect = true;
+                let hasSelection = false;
+
+                buttons.forEach(btn => {
+                    btn.disabled = true; // Deshabilitar clics
+                    const isSelected = btn.classList.contains('selected');
+                    const isActuallyCorrect = btn.dataset.correct === "true";
+
+                    if (isSelected) hasSelection = true;
+
+                    if (isSelected && isActuallyCorrect) {
+                        btn.classList.add('correct');
+                    } else if (isSelected && !isActuallyCorrect) {
+                        btn.classList.add('incorrect');
+                        isCorrect = false; 
+                    } else if (!isSelected && isActuallyCorrect) {
+                        btn.style.border = "2px solid #2ecc71";
+                        btn.style.backgroundColor = "#e8f8f5";
+                        isCorrect = false; 
+                    }
+                });
+
+                if (isCorrect && hasSelection) score++;
+            });
+
+            const scoreDisplay = document.getElementById('score-display');
+            scoreDisplay.style.display = 'block';
+            scoreDisplay.innerText = `Calificación Final: ${score} / 40 (${((score/40)*100).toFixed(0)}%)`;
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('reload-btn').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        window.onload = buildQuiz;
+    </script>
+</body>
+</html>
